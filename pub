@@ -1,0 +1,41 @@
+
+uci set wireless.radio1.country='US'
+uci set wireless.radio1.txpower='30'
+uci set wireless.radio1.htmode='HT40'
+uci set wireless.radio1.channel='auto'
+uci set wireless.@wifi-iface[1]=wifi-iface
+uci set wireless.@wifi-iface[1].ssid='........'
+uci set wireless.@wifi-iface[1].encryption='psk2+ccmp'
+uci set wireless.@wifi-iface[1].device='radio1'
+uci set wireless.@wifi-iface[1].mode='sta'
+uci set wireless.@wifi-iface[1].key='..............'
+uci set wireless.@wifi-iface[1].network='lan wwanUSB'
+uci set wireless.@wifi-iface[1].bssid='4C:5E:0C:'
+
+ifdown wwanUSB
+
+                                                                                                                                         
+OLDMAC=$(uci get network.wwanUSB.macaddr)                                                                                                
+  echo ${OLDMAC}                                                                                                                         
+  while true; do                                                                                                                            
+                                                                                                                                            
+        NEWMAC=$(dd if=/dev/urandom bs=1024 count=1 2>/dev/null | md5sum | sed 's/^\(..\)\(..\)\(..\)\(..\)\(..\)\(..\).*$/\1:\2:\3:\4:\5:\6/')
+
+        foo=$((0x${NEWMAC:0:2}))                                                             
+        # Comprueba que el primer byte de la MAC sea par, si no lo es repite hasta que lo sea
+                if [ $((foo%2)) -eq 0 ];
+                        then       
+                        echo "par";
+                        break
+                else         
+                echo "impar";
+                fi
+done            
+                                                   
+  echo ${NEWMAC}                                   
+  uci set wireless.@wifi-iface[1].macaddr=${NEWMAC}
+  uci set network.wwanUSB.macaddr=${NEWMAC}
+                   
+uci commit wireless
+ifup wwanUSB
+

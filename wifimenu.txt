@@ -1,0 +1,59 @@
+wireless.radio0=wifi-device
+wireless.radio0.type='mac80211'
+wireless.radio0.hwmode='11g'
+wireless.radio0.path='pci0000:00/0000:00:00.0/0000:01:00.0/bcma0:1'
+wireless.radio0.channel='1'
+wireless.radio0.country='US'
+wireless.radio0.txpower='24'
+wireless.radio1=wifi-device
+wireless.radio1.type='mac80211'
+wireless.radio1.path='platform/ehci-platform/usb1/1-1/1-1:1.0'
+wireless.radio1.disabled='0'
+wireless.radio1.hwmode='11g'
+wireless.radio1.channel='auto'
+wireless.radio1.country='US'
+wireless.radio1.htmode='HT40'
+wireless.radio1.txpower='30'
+wireless.@wifi-iface[0]=wifi-iface
+wireless.@wifi-iface[0].device='radio0'
+wireless.@wifi-iface[0].ssid='WLAN_2505'
+wireless.@wifi-iface[0].mode='ap'
+wireless.@wifi-iface[0].wmm='0'
+wireless.@wifi-iface[0].encryption='psk2+ccmp'
+wireless.@wifi-iface[0].key='.999999999.'
+wireless.@wifi-iface[0].network='lan wwan'
+wireless.@wifi-iface[1]=wifi-iface
+wireless.@wifi-iface[1].ssid='MOVISTAR_B5E6'
+wireless.@wifi-iface[1].encryption='psk'
+wireless.@wifi-iface[1].device='radio1'
+wireless.@wifi-iface[1].mode='sta'
+wireless.@wifi-iface[1].bssid='F8:FB:56:2C:B5:EF'
+wireless.@wifi-iface[1].key='H3EUA3DkNPaCcEe4NMtM'
+wireless.@wifi-iface[1].macaddr='D2:B8:C0:8D:13:6E'
+wireless.@wifi-iface[1].network='lan wwanUSB'
+
+uci set wireless.radio1.country='US'
+uci set wireless.radio1.txpower='30'
+uci set wireless.radio1.htmode='HT20'
+uci set wireless.radio1.channel='auto'
+uci set wireless.wificlient.ssid='MOVISTAR_B5E6'
+uci set wireless.wificlient.encryption='psk'
+uci set wireless.wificlient.key='H3EUA3DkNPaCcEe4NMtM'
+uci commit wireless
+wifi down
+wifi up
+
+uci set wireless.radio1.country='US'
+uci set wireless.radio1.txpower='30'
+uci set wireless.radio1.htmode='HT40'
+uci set wireless.radio1.channel='auto'
+uci set wireless.wificlient.ssid='Centralpub'
+uci set wireless.wificlient.encryption='psk2+ccmp'
+uci set wireless.wificlient.key='centralpub19681970'
+uci commit wireless
+wifi down
+wifi up
+
+
+
+

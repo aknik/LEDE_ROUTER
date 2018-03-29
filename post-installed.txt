@@ -1,0 +1,19 @@
+opkg update
+opkg install kmod-rt2x00-usb
+opkg install kmod-rt2800-usb
+opkg install rt2800-usb-firmware
+opkg install arptables
+opkg install aircrack-ng 
+opkg install airmon-ng 
+
+
+opkg remove ip6tables
+opkg remove kmod-ip6tables
+opkg remove kmod-nf-ipt6
+
+
+
+
+
+
+

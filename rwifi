@@ -1,0 +1,60 @@
+
+NUMBER=$(head /dev/urandom | tr -dc "12345" | head -c1)
+echo $NUMBER
+
+List="WLAN_ JAZZTEL_ TPLINK_ FDE- MOVISTAR_"
+
+W=$(echo $List | cut -d" " -f$NUMBER)
+
+ifdown wwan
+
+  OLDMAC=$(uci get network.wwan.macaddr)
+  echo ${OLDMAC}
+
+while true; do
+
+NEWMAC=$(dd if=/dev/urandom bs=1024 count=1 2>/dev/null | md5sum | sed 's/^\(..\)\(..\)\(..\)\(..\)\(..\)\(..\).*$/\1:\2:\3:\4:\5:\6/')
+	foo=$((0x${NEWMAC:0:2}))                                                                                                                    
+		if [ $((foo%2)) -eq 0 ];                                                                                                                    
+			then                                                                                                                                        
+    			echo "par"; 
+    			break                                                                                                                            
+		else                                                                                                                                        
+    		echo "impar";                                                                                                                           
+		fi                                                                                                                                          
+done
+
+  SSID=$W$(echo -n $NEWMAC | tail -c 9)
+  SSID=$(echo $SSID | sed 's/\://g'| tr /a-z/ /A-Z/)
+  echo $SSID
+  echo $NEWMAC
+  REVMAC=$(echo $NEWMAC |md5sum |awk '{for (i = length($0); i > 0; i--) {printf("%s", substr($0, i, 1));} print "";}'| cut -d " " -f 3)
+  echo $REVMAC
+
+
+ uci set wireless.radio0=wifi-device
+ uci set wireless.radio0.type='mac80211'
+# uci set wireless.radio0.hwmode='11g'
+# uci set wireless.radio0.path='pci0000:00/0000:00:00.0/0000:01:00.0/bcma0:1'
+ uci set wireless.radio0.country='US'
+ uci set wireless.radio0.txpower='24'
+ uci set wireless.radio0.distance='30'
+ uci set wireless.radio0.channel='2'
+
+  uci set network.wwan.macaddr=${NEWMAC}
+  uci set wireless.@wifi-iface[0].macaddr=${NEWMAC}  
+  uci set wireless.@wifi-iface[0].ssid=${SSID}
+  uci set wireless.@wifi-iface[0].key='............'
+  uci set wireless.@wifi-iface[0]=wifi-iface
+  uci set wireless.@wifi-iface[0].device='radio0'
+  uci set wireless.@wifi-iface[0].mode='ap'
+  uci set wireless.@wifi-iface[0].wmm='1'
+  uci set wireless.@wifi-iface[0].network='lan wwan'
+  uci set wireless.@wifi-iface[0].encryption='psk2'
+  uci set wireless.@wifi-iface[0].disabled='0'
+
+uci commit wireless
+ifup wwan
+
+
+
