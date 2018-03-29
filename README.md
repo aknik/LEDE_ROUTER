@@ -1,2 +1,7 @@
 # LEDE_ROUTER
-configuracion de mi router
+Configuración de Router Comtrend AR 5387UN con OpenWrt.
+
+
+
+
+
